@@ -1,16 +1,111 @@
-# React + Vite
+📅 Készenléti Beosztás és Ügyeletkezelő
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Egy Készenléti Beosztás és Ügyeletkezelő webalkalmazás (React + Node.js/Express alapokon), amelyet kifejezetten arra terveztek, hogy több különböző csoport közösen, egy belső hálózaton tudja vezetni és kezelni a havi készenléti naptárát.
 
-Currently, two official plugins are available:
+✨ Főbb Funkciók
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+👥 Többcsapatos Kezelés: Tetszőleges számú csapat hozható létre. A legördülő menüből azonnal váltani lehet a csoportok között.
 
-## React Compiler
+📱 Tagok és Elérhetőségek: Csapattagok felvétele névvel, telefonszámmal és egyedi kijelölő színnel.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+📅 Interaktív Havi Naptár: Gyors naponkénti beosztás és módosítás egyetlen kattintással.
 
-## Expanding the ESLint configuration
+🔍 Mai Készenlétes Kijelzés: A fejléces sávban azonnal látható az aktuális napra beosztott csapattag és elérhetősége.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+💾 Központi Adattárolás: A módosítások egy szerveroldali data.json fájlban tárolódnak, így a hálózaton minden felhasználónál valós időben ugyanaz az állapot jelenik meg.
+
+🔒 Offline & Izolált Működés: 100%-ban belső hálózaton futtatható.
+
+🏗️ Architektúra
+
+  [ Böngészők / Belső Gépek ]
+              │
+              ▼ (HTTP / API)
+   ┌──────────────────────┐
+   │    Node.js Szerver   │
+   │ ┌──────────────────┐ │
+   │ │  Express Backend │ │
+   │ └────────┬─────────┘ │
+   │          │ (Kiszolgálja)
+   │ ┌────────▼─────────┐ │
+   │ │ React Frontend   │ │
+   │ │   (dist mappa)   │ │
+   │ └──────────────────┘ │
+   └──────────┬───────────┘
+              │ (Mentés/Betöltés)
+              ▼
+        [ data.json ]
+
+
+🚀 Futtatás és Telepítés
+
+1. Opció: Használat Dockerrel (Ajánlott)
+
+Ha rendelkezésedre áll egy Docker környezet, az alkalmazást egyetlen konténerben elindíthatod.
+
+🛠️ Image Építése (Offline / Pre-built dist esetén)
+
+Ha a frontendet korábban már lebuiltelted (npm run build), a projekt gyökerében lévő Dockerfile-t használd!:
+
+docker build -t keszenlet-app .
+
+
+🏃‍♂️ Konténer Indítása
+
+Futtasd az alábbi parancsot. A -v kapcsoló gondoskodik arról, hogy az adatok megmaradjanak a gépeden a konténer újraindítása után is:
+
+docker run -d \
+  -p 3000:3000 \
+  -v $(pwd)/data:/app/data \
+  --name keszenlet-container \
+  keszenlet-app
+
+
+Ezután az alkalmazás elérhető a http://<SZERVER_IP>:3000 címen.
+
+2. Opció: Hagyományos Node.js Futtatás (Docker nélkül)
+
+Ha nem használsz Dockert, hanem közvetlenül egy Node.js szerveren futtatod az alkalmazást:
+
+📂 Könyvtárstruktúra
+
+Győződj meg róla, hogy a lefordított dist/ mappa a server.js mellett található:
+
+📁 keszenlet-app/
+├── 📁 dist/             <-- Az npm run build által generált kimeneti mappa
+├── 📁 node_modules/
+├── server.js            <-- Express backend szerver
+├── package.json
+└── data.json            <-- Az adatok automatikusan ide mentődnek
+
+
+⚙️ Lépések:
+
+Buildelés (fejlesztői gépen):
+
+npm run build
+
+
+Másolás a szerverre: Másold át a dist/ mappát, a server.js-t és a package.json-t a célgépre.
+
+Függőségek telepítése:
+
+npm install --production
+
+Szerver indítása:
+
+node server.js
+
+🛠️ Használt Technólogiák
+
+Frontend: React 19, Tailwind CSS v4, Vite
+
+Backend: Node.js, Express.js
+
+Adatréteg: Lokális JSON alapú adattárolás (fs)
+
+Konténerizáció: Docker (Alpine Linux alapon)
+
+📜 Licensz
+
+Ez a projekt szabadon felhasználható és módosítható belső céges vagy személyes célokra. (MIT License)
