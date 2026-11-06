@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 const INITIAL_TEAMS = {
   arany: {
-    name: 'Arany Csapat',
+    name: 'Példa Csapat',
     members: [
       { id: '1', name: 'Kovács Péter', phone: '+36 30 123 4567', color: '#f59e0b' },
       { id: '2', name: 'Nagy Anna', phone: '+36 20 987 6543', color: '#10b981' },
@@ -392,6 +392,10 @@ export default function App() {
           </div>
         </div>
       )}
+      <footer 
+        className="text-center py-4 text-xs cursor-default" style={{ color: '#0f172a' }} title="Készítette: Füzi">
+        Készenléti Rendszer v1.0 by Füzi with LOVE
+      </footer>
     </div>
   );
 }
